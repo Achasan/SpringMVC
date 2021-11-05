@@ -55,15 +55,17 @@ public class FrontControllerServletV5 extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+        // request 객체에서 URI를 가져와서 handlerMappingMap에서 맞는 객체를 가져옴
         Object handler = getHandler(request);
+        // 만약 없을 경우 Not found 에러 출력
         if(handler == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-
+        // MyHandlerAdapter 구현체에 해당하는 adapter가 있는지 확인
         MyHandlerAdapter adapter = getHandlerAdapter(handler);
-
+        // 해당 adapter 비즈니스 로직 실행 : 각 버전에 맞는 방식으로 실행되는 비즈니스 로직이 MyHandlerAdapter 구현체에 존재한다.
+        // 공통 로직에 맞추기 위히 ModelView 객체를 리턴
         ModelView mv = adapter.handle(request, response, handler);
 
         String viewName = mv.getViewName();
